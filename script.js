@@ -1,42 +1,56 @@
-let menuVisible = false;
-//Función que oculta o muestra el menu
-function mostrarOcultarMenu(){
-    if(menuVisible){
-        document.getElementById("nav").classList ="";
-        menuVisible = false;
-    }else{
-        document.getElementById("nav").classList ="responsive";
-        menuVisible = true;
+// Variable para controlar si las habilidades ya se animaron
+let habilidadesAnimadas = false;
+
+// Función para mostrar/ocultar el menú responsive
+function mostrarOcultarMenu() {
+    const nav = document.getElementById("nav");
+    nav.classList.toggle("responsive");
+}
+
+// Función para cerrar el menú al hacer click en una opción (útil en responsive)
+function seleccionar() {
+    // Oculta el menú
+    document.getElementById("nav").classList.remove("responsive");
+}
+
+// Función para animar las barras de habilidades al hacer scroll
+function efectoHabilidades() {
+    if (habilidadesAnimadas) {
+        return; // Detiene la función si ya se animaron
+    }
+
+    const skillsSection = document.getElementById("skills");
+    // Obtiene la posición superior de la sección de habilidades en relación a la ventana
+    const distancia_skills = skillsSection.getBoundingClientRect().top;
+
+    // Define un punto de activación, por ejemplo, cuando la sección está a 300px del borde superior
+    const puntoActivacion = window.innerHeight - 300; 
+
+    if (distancia_skills <= puntoActivacion) {
+        // La sección está en pantalla o cerca, se activa la animación
+        habilidadesAnimadas = true; 
+        
+        // Selecciona todos los elementos con la clase .progreso
+        const barras = document.querySelectorAll(".barra-skill .progreso");
+        
+        // Itera sobre cada barra y le añade la clase que define su ancho (e.g., 'javascript')
+        barras.forEach(barra => {
+            // La clase de ancho (e.g., 'javascript' o 'htmlcss') es la segunda en la lista
+            const className = barra.classList[1]; 
+            if (className) {
+                barra.classList.add(className); 
+            }
+        });
     }
 }
 
-function seleccionar(){
-    //oculto el menu una vez que selecciono una opcion
-    document.getElementById("nav").classList = "";
-    menuVisible = false;
-}
-//Funcion que aplica las animaciones de las habilidades
-function efectoHabilidades(){
-    var skills = document.getElementById("skills");
-    var distancia_skills = window.innerHeight - skills.getBoundingClientRect().top;
-    if(distancia_skills >= 300){
-        let habilidades = document.getElementsByClassName("progreso");
-        habilidades[0].classList.add("javascript");
-        habilidades[1].classList.add("htmlcss");
-        habilidades[5].classList.add("comunicacion");
-        habilidades[6].classList.add("trabajo");
-        habilidades[7].classList.add("creatividad");
-        habilidades[8].classList.add("dedicacion");
-    }
-}
+// Agregamos un listener al evento scroll para llamar a la función de animación
+window.addEventListener("scroll", efectoHabilidades);
 
-
-//detecto el scrolling para aplicar la animacion de la barra de habilidades
-window.onscroll = function(){
-    efectoHabilidades();
-} 
-window.onscroll = function(){
+// Llamamos la función una vez al cargar por si la sección ya está visible
+efectoHabilidades();
     efectoHabilidades();
 
 } 
+
 
